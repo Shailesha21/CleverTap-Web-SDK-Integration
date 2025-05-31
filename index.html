@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CleverTap Integration - Signup Form</title>
+    
+    <!-- CleverTap Integration -->
+    <script type="text/javascript">
+        var clevertap = {event:[], profile:[], account:[], onUserLogin:[], notifications:[], privacy:[]};
+        clevertap.account.push({"id": "Z44-Z4K-K65Z"});
+        clevertap.privacy.push({optOut: false});
+        clevertap.privacy.push({useIP: false});
+        (function () {
+            var wzrk = document.createElement('script');
+            wzrk.type = 'text/javascript';
+            wzrk.async = true;
+            wzrk.src = ('https:' == document.location.protocol ? 'https://d2r1yp2w7bby2u.cloudfront.net' : 'http://static.clevertap.com') + '/js/clevertap.min.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wzrk, s);
+        })();
+        
+        // Enable debug logs
+        sessionStorage['WZRK_D'] = '';
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .form-group input:valid {
+            border-color: #4CAF50;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover:before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(245, 87, 108, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #fa709a, #fee140);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(250, 112, 154, 0.3);
+        }
+
+        .btn-full {
+            grid-column: 1 / -1;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .status-message.show {
+            opacity: 1;
+        }
+
+        .status-success {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+            border: 2px solid #4CAF50;
+        }
+
+        .status-error {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+            border: 2px solid #f44336;
+        }
+
+        .status-info {
+            background: rgba(33, 150, 243, 0.1);
+            color: #2196F3;
+            border: 2px solid #2196F3;
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .button-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles" id="particles"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>CleverTap Integration</h1>
+            
+        </div>
+
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required placeholder="Enter phone with country code (+1234567890)">
+            </div>
+
+            <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" name="dob" required>
+            </div>
+
+            <div class="button-grid">
+                <button type="button" id="loginBtn" class="btn btn-primary">Login</button>
+                <button type="button" id="profilePushBtn" class="btn btn-secondary">Profile Push</button>
+                <button type="button" id="askPushBtn" class="btn btn-success">Ask For Push</button>
+                <button type="button" id="raiseEventBtn" class="btn btn-warning">Raise Event</button>
+            </div>
+        </form>
+
+        <div id="statusMessage" class="status-message"></div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.width = Math.random() * 6 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type = 'info') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message status-${type} show`;
+            
+            setTimeout(() => {
+                statusEl.classList.remove('show');
+            }, 3000);
+        }
+
+        // Get form data
+        function getFormData() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const dobInput = document.getElementById('dob').value;
+            
+            if (!name || !email || !phone || !dobInput) {
+                showStatus('Please fill in all fields', 'error');
+                return null;
+            }
+            
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showStatus('Please enter a valid email address', 'error');
+                return null;
+            }
+            
+            // Validate phone (should start with + and have country code)
+            const phoneRegex = /^\+\d{10,15}$/;
+            if (!phoneRegex.test(phone)) {
+                showStatus('Please enter phone with country code (e.g., +1234567890)', 'error');
+                return null;
+            }
+            
+            const dob = new Date(dobInput);
+            
+            return { name, email, phone, dob };
+        }
+
+        // Login button functionality
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            const userData = getFormData();
+            if (!userData) return;
+            
+            try {
+                clevertap.onUserLogin.push({
+                    "Site": {
+                        "Name": userData.name,
+                        "Email": userData.email,
+                        "Phone": userData.phone,
+                        "DOB": userData.dob
+                    }
+                });
+                
+                console.log('CleverTap Login called with data:', userData);
+                showStatus('User login successful! Check console for details.', 'success');
+            } catch (error) {
+                console.error('Login error:', error);
+                showStatus('Login failed. Check console for details.', 'error');
+            }
+        });
+
+        // Profile Push button functionality
+        document.getElementById('profilePushBtn').addEventListener('click', function() {
+            const userData = getFormData();
+            if (!userData) return;
+            
+            try {
+                clevertap.profile.push({
+                    "Site": {
+                        "Name": userData.name,
+                        "Email": userData.email,
+                        "Phone": userData.phone,
+                        "DOB": userData.dob
+                    }
+                });
+                
+                console.log('CleverTap Profile Push called with data:', userData);
+                showStatus('Profile data pushed successfully! Check console for details.', 'success');
+            } catch (error) {
+                console.error('Profile push error:', error);
+                showStatus('Profile push failed. Check console for details.', 'error');
+            }
+        });
+
+        // Ask For Push button functionality
+        document.getElementById('askPushBtn').addEventListener('click', function() {
+            try {
+                clevertap.notifications.push({
+                    "titleText": 'Would you like to receive Push Notifications?',
+                    "bodyText": 'We promise to only send you relevant content and give you updates on your transactions',
+                    "okButtonText": 'Sign me up!',
+                    "rejectButtonText": 'No thanks',
+                    "askAgainTimeInSeconds": 5,
+                    "okButtonColor": '#f28046'
+                });
+                
+                console.log('CleverTap Push Notification Request sent');
+                showStatus('Push notification permission requested!', 'info');
+            } catch (error) {
+                console.error('Push notification error:', error);
+                showStatus('Push notification request failed. Check console for details.', 'error');
+            }
+        });
+
+        // Raise Event button functionality
+        document.getElementById('raiseEventBtn').addEventListener('click', function() {
+            const userData = getFormData();
+            if (!userData) return;
+            
+            try {
+                // Create a comprehensive event with various property types
+                const eventData = {
+                    // String properties
+                    "Event Category": "User Engagement",
+                    "Event Source": "Signup Form",
+                    "User Name": userData.name,
+                    "User Email": userData.email,
+                    "Device Type": "Web",
+                    
+                    // Integer properties
+                    "Session Count": Math.floor(Math.random() * 10) + 1,
+                    "Page Views": Math.floor(Math.random() * 50) + 1,
+                    "User Age": Math.floor((new Date() - userData.dob) / (365.25 * 24 * 60 * 60 * 1000)),
+                    
+                    // Float properties
+                    "Engagement Score": parseFloat((Math.random() * 10).toFixed(2)),
+                    "Session Duration": parseFloat((Math.random() * 30 + 5).toFixed(2)),
+                    "Conversion Rate": parseFloat((Math.random() * 0.5).toFixed(3)),
+                    
+                    // Date-time properties
+                    "Event Timestamp": new Date(),
+                    "User DOB": userData.dob,
+                    "Last Login": new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
+                    
+                    // Boolean properties
+                    "Premium User": Math.random() > 0.5,
+                    "Email Verified": true,
+                    "Push Enabled": Math.random() > 0.3,
+                    
+                    // Additional properties
+                    "Browser": navigator.userAgent.includes('Chrome') ? 'Chrome' : 
+                              navigator.userAgent.includes('Firefox') ? 'Firefox' : 
+                              navigator.userAgent.includes('Safari') ? 'Safari' : 'Other',
+                    "Screen Resolution": `${screen.width}x${screen.height}`,
+                    "Timezone": Intl.DateTimeFormat().resolvedOptions().timeZone
+                };
+                
+                clevertap.event.push("Custom_Signup_Event", eventData);
+                
+                console.log('CleverTap Custom Event raised with data:', eventData);
+                showStatus('Custom event raised successfully! Check console for event details.', 'success');
+                
+                // Also raise a simple event
+                clevertap.event.push("Button_Clicked", {
+                    "Button Name": "Raise Event",
+                    "Click Time": new Date(),
+                    "User": userData.name
+                });
+                
+            } catch (error) {
+                console.error('Event raising error:', error);
+                showStatus('Event raising failed. Check console for details.', 'error');
+            }
+        });
+
+        // Form validation with real-time feedback
+        document.getElementById('signupForm').addEventListener('input', function(e) {
+            const input = e.target;
+            if (input.checkValidity()) {
+                input.style.borderColor = '#4CAF50';
+            } else {
+                input.style.borderColor = '#e0e0e0';
+            }
+        });
+
+        // Initialize particles and show welcome message
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            setTimeout(() => {
+                showStatus('CleverTap integration loaded successfully! Fill the form and test the buttons.', 'info');
+            }, 1000);
+            
+            // Log CleverTap initialization
+            console.log('CleverTap Account ID:', 'Z44-Z4K-K65Z');
+            console.log('Debug mode enabled - check sessionStorage["WZRK_D"]');
+            console.log('Use browser console to monitor CleverTap events and API calls');
+        });
+
+        // Add some interactive effects
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px) scale(1.02)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
